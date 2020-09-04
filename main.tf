@@ -3,8 +3,8 @@ provider "aws" {
   region  = "ap-southeast-1" # Setting my region to Singapore.
 }
 
-resource "aws_ecr_repository" "techchallenge_ecr_repo" {
-  name = "techchallenge-ecr-repo" # Naming my repository
+resource "aws_ecr_repository" "techchallenge_repo" {
+  name = "techchallenge-repo" # Naming my repository
 }
 
 resource "aws_ecs_cluster" "techchallenge_cluster" {
@@ -17,7 +17,7 @@ resource "aws_ecs_task_definition" "techchallenge_task" {
   [
     {
       "name": "techchallenge-task",
-      "image": "${aws_ecr_repository.techchallenge_ecr_repo.repository_url}",
+      "image": "${aws_ecr_repository.techchallenge_repo.repository_url}",
       "essential": true,
       "portMappings": [
         {
@@ -44,8 +44,9 @@ resource "aws_iam_role" "ecsTaskExecutionRole" {
 
 data "aws_iam_policy_document" "assume_role_policy" {
   statement {
-    actions = ["sts:AssumeRole"]
-
+    actions = [
+      "sts:AssumeRole"
+              ]
     principals {
       type        = "Service"
       identifiers = ["ecs-tasks.amazonaws.com"]
@@ -82,3 +83,33 @@ resource "aws_default_subnet" "default_subnet_b" {
 resource "aws_default_subnet" "default_subnet_c" {
   availability_zone = "ap-southeast-1c"
 }
+
+resource "aws_alb" "application_load_balancer" {
+  name               = "test-lb-tf" # Naming our load balancer
+  load_balancer_type = "application"
+  subnets = [ # Referencing the default subnets
+    "${aws_default_subnet.default_subnet_a.id}",
+    "${aws_default_subnet.default_subnet_b.id}",
+    "${aws_default_subnet.default_subnet_c.id}"
+  ]
+  # Referencing the security group
+  security_groups = ["${aws_security_group.load_balancer_security_group.id}"]
+}
+
+# Creating a security group for the load balancer:
+resource "aws_security_group" "load_balancer_security_group" {
+  ingress {
+    from_port   = 80 # Allowing traffic in from port 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"] # Allowing traffic in from all sources
+  }
+
+  egress {
+    from_port   = 0 # Allowing any incoming port
+    to_port     = 0 # Allowing any outgoing port
+    protocol    = "-1" # Allowing any outgoing protocol 
+    cidr_blocks = ["0.0.0.0/0"] # Allowing traffic out to all IP addresses
+  }
+}
+
