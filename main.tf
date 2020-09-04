@@ -30,8 +30,8 @@ resource "aws_ecs_task_definition" "techchallenge_task" {
     }
   ]
   DEFINITION
-  requires_compatibilities = ["FARGATE"] # Stating that we are using ECS Fargate
-  network_mode             = "awsvpc"    # Using awsvpc as our network mode as this is required for Fargate
+  requires_compatibilities = ["FARGATE"] # Stating ECS Fargate
+  network_mode             = "awsvpc"    # Using awsvpc as network mode as this is required for Fargate
   memory                   = 512         # Specifying the memory our container requires
   cpu                      = 256         # Specifying the CPU our container requires
   execution_role_arn       = "${aws_iam_role.ecsTaskExecutionRole.arn}"
@@ -65,7 +65,7 @@ resource "aws_ecs_service" "techchallenge_service" {
   cluster         = "${aws_ecs_cluster.techchallenge_cluster.id}"       # Referencing the created Cluster
   task_definition = "${aws_ecs_task_definition.techchallenge_task.arn}"      # Referencing the task that service will spin up
   launch_type     = "FARGATE"
-  desired_count   = 3 # Setting the number of containers we want deployed to 3
+  desired_count   = 3 # Setting the number of containers
 
   load_balancer {
     target_group_arn = "${aws_lb_target_group.target_group.arn}" # Referencing our target group
@@ -74,7 +74,7 @@ resource "aws_ecs_service" "techchallenge_service" {
   }
   network_configuration {
     subnets          = ["${aws_default_subnet.default_subnet_a.id}", "${aws_default_subnet.default_subnet_b.id}", "${aws_default_subnet.default_subnet_c.id}"]
-    assign_public_ip = true # Providing our containers with public IPs
+    assign_public_ip = true # Providing containers with public IPs
     security_groups  = ["${aws_security_group.service_security_group.id}"] # Setting the security group
   }
 }
@@ -97,7 +97,7 @@ resource "aws_default_subnet" "default_subnet_c" {
 }
 
 resource "aws_alb" "application_load_balancer" {
-  name               = "test-lb-tf" # Naming our load balancer
+  name               = "test-lb-tf" # Naming load balancer
   load_balancer_type = "application"
   subnets = [ # Referencing the default subnets
     "${aws_default_subnet.default_subnet_a.id}",
@@ -134,12 +134,12 @@ resource "aws_lb_target_group" "target_group" {
 }
 
 resource "aws_lb_listener" "listener" {
-  load_balancer_arn = "${aws_alb.application_load_balancer.arn}" # Referencing our load balancer
+  load_balancer_arn = "${aws_alb.application_load_balancer.arn}" # Referencing load balancer
   port              = "80"
   protocol          = "HTTP"
   default_action {
     type             = "forward"
-    target_group_arn = "${aws_lb_target_group.target_group.arn}" # Referencing our tagrte group
+    target_group_arn = "${aws_lb_target_group.target_group.arn}" # Referencing target group
   }
 }
 
