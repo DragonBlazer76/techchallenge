@@ -18,6 +18,15 @@ Installation of the following is needed:
 2. Change the `localhost` binding to `0.0.0.0` for `"ListenHost"` as docker cannot bind to localhost in `config.toml`
 3. Build the docker image `docker build . -t techchallengeapp:latest`
 4. Using Terraform, create a docker registry in AWS ECR
-5. Push the image to ECR with the command with AWS command provided.
+5. Push the image to ECR with the command with AWS command provided. File is `main.tf`
 ![guide](doc/images/ECR_guide.png)
-6. 
+6. Use Terraform to create of the rest of infrastructure. This includes:
+   - AWS ECS cluster
+   - Pull from ECS task with mapping of container port, memory size, cpu, etc and spin 3 of them for a start
+   - Create IAM role policy
+   - Create ECS service
+   - Define load balancer
+   - Define avaliability zone
+   - Define security group
+   - Define target group
+   - Bind all together
