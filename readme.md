@@ -35,7 +35,7 @@ Architecure diagram can be seen below:
 6. Push the image to ECR with the command with AWS command provided. File is `main.tf`
 ![guide](doc/images/ECR_guide.png)
 
-**Note to evalutator**
+## Note to evalutator
 ## What could have been done better
 - Use some automation tool for building to code and push to ECR. As of writting, due to time constraint and no knowledge of CodeDepoly, thus I did not use.
 - Have a shared credential file for AWS and variable file.(https://registry.terraform.io/providers/hashicorp/aws/latest/docs)
