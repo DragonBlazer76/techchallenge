@@ -37,7 +37,7 @@ Architecure diagram can be seen below:
 
 ## Note to evalutator
 ## What could have been done better
-- Use some automation tool for building to code and push to ECR. As of writting, due to time constraint and no knowledge of CodeDepoly, thus I did not use.
+- Use some automation tool for building the code and push to ECR. As of writting, due to time constraint and no knowledge of CodeDepoly, thus I did not use.
 - Have a shared credential file for AWS and variable file.(https://registry.terraform.io/providers/hashicorp/aws/latest/docs)
 - Have an output.tf for output some variables like IP address
 - Check out the [link](http://test-lb-tf-729572412.ap-southeast-1.elb.amazonaws.com) for the website deployed.
