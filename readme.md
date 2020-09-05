@@ -15,6 +15,7 @@ Installation of the following is needed:
 
 ## Steps
 1. Clone this repo down to your local.
+2. Login to your own AWS account using the AWS cli
 2. Run `terraform init`
 3. Run `terraform plan` to check if there is any problem
 4. Run `terraform apply`. Terraform will create of the rest of infrastructure. This includes:
@@ -28,7 +29,15 @@ Installation of the following is needed:
    - Define security group
    - Define target group
    - Bind all together
+Architecure diagram can be seen below:
+![architecure](doc/images/my_architecture.png)
 5. Build the docker image `docker build . -t techchallengeapp-repo:latest`
 6. Push the image to ECR with the command with AWS command provided. File is `main.tf`
 ![guide](doc/images/ECR_guide.png)
+
+**Note to evalutator**
+## What could have been done better
+- Use some automation tool for building to code and push to ECR. As of writting, due to time constraint and no knowledge of CodeDepoly, thus I did not use.
+- Have a shared credential file for AWS and variable file.(https://registry.terraform.io/providers/hashicorp/aws/latest/docs)
+- Have an output.tf for output some variables like IP address
 
